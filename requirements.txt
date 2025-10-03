@@ -1,0 +1,32 @@
+# Core Data Processing and Analysis
+pandas==2.1.1
+numpy==1.26.0
+scipy==1.11.3
+
+# Visualization Libraries
+plotly==5.17.0
+seaborn==0.13.0
+matplotlib==3.8.0
+
+# Dashboard Framework
+streamlit==1.28.0
+
+# Data Format and File Handling
+openpyxl==3.1.2
+python-dotenv==1.0.0
+
+# Jupyter Environment
+jupyter==1.0.0
+notebook==7.0.4
+ipykernel==6.25.2
+ipython==8.16.1
+jupyter-client==8.3.1
+jupyter-core==5.3.2
+
+# Additional Dependencies
+altair==5.1.2
+pytz==2023.3.post1
+python-dateutil==2.8.2
+
+# Optional Machine Learning Support
+scikit-learn==1.3.1

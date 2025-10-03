@@ -1,0 +1,13 @@
+# Ignore everything inside output/
+output/*
+
+# But keep the folder itself
+!output/.gitkeep
+
+# Ignore everything inside questions_png/
+output/questions_png/*
+
+# But keep that folder itself
+!output/questions_png/.gitkeep
+
+esg/
