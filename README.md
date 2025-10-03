@@ -173,7 +173,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Akash Kumar - [akashkumar.cs27@gmail.com](mailto:akashkumar.cs27@gmail.com)
 
-Project Link: [https://github.com/yourusername/esg_predictor](https://github.com/XynaxDev/esg_predictor)
+Project Link: [https://github.com/XynaxDev/esg_predictor](https://github.com/XynaxDev/esg_predictor)
 
 ---
 
