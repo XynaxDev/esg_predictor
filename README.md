@@ -53,9 +53,9 @@ The ESG Analytics Dashboard is a sophisticated data visualization platform desig
 ### Prerequisites
 
 ```bash
-python -m venv esgenv
-source esgenv/bin/activate  # Linux/macOS
-esgenv\Scripts\activate     # Windows
+python -m venv esg
+source esg/bin/activate  # Linux/macOS
+esg\Scripts\activate     # Windows
 ```
 
 ### Installation

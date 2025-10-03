@@ -1,13 +1,15 @@
-# Ignore everything inside output/
-output/*
+# Ignore all files inside output/ except folders
+output/**/*
 
-# But keep the folder itself
-!output/.gitkeep
+# Keep the output folder itself
+!output/
 
-# Ignore everything inside questions_png/
-output/questions_png/*
+# Ignore all files inside questions_png/
+output/questions_png/**/*
 
-# But keep that folder itself
-!output/questions_png/.gitkeep
+# Keep the questions_png folder itself
+!output/questions_png/
 
+
+# Your project folder
 esg/
