@@ -1,4 +1,4 @@
-import streamlit as st
+﻿import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
@@ -16,6 +16,10 @@ st.set_page_config(
     page_icon="♾️",
     layout="wide",
     initial_sidebar_state="expanded",
+    menu_items={
+        "Get Help": "https://github.com/XynaxDev/esg_score_predictor",
+        "About": "ESG Analytics Dashboard - Built with Streamlit",
+    },
 )
 
 # ============================================================================
@@ -27,6 +31,30 @@ st.markdown(
     /* Import Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
+    /* CSS Variables for consistent theming */
+    :root {
+        --bg-primary: #0E1117;
+        --bg-secondary: #262730;
+        --bg-tertiary: #1E1E1E;
+        --text-primary: #FFFFFF;
+        --text-secondary: #FAFAFA;
+        --text-muted: #9CA3AF;
+        --border-color: rgba(250, 250, 250, 0.1);
+        --border-hover: rgba(250, 250, 250, 0.2);
+        /* Streamlit-inspired color palette */
+        --accent-primary: #FF4B4B;
+        --accent-secondary: #00C0F2;
+        --accent-tertiary: #9DD4E9;
+        --accent-positive: #00CC96;
+        --accent-warning: #FFA421;
+        --accent-purple: #BD93F9;
+        --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.25);
+        --shadow-lg: 0 10px 15px rgba(0,0,0,0.3);
+        --chart-bg: #262730;
+        --grid-color: rgba(250,250,250,0.1);
+    }
+    
     /* Global Styles */
     * {
         font-family: 'Inter', sans-serif;
@@ -34,14 +62,14 @@ st.markdown(
     
     /* Main background */
     .main {
-        background-color: #0e1117;
-        color: #fafafa;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
         padding: 1rem;
     }
     
     /* Override default Streamlit background */
     .stApp {
-        background-color: #0e1117;
+        background-color: var(--bg-primary);
     }
     
     /* Fix text colors globally */
@@ -75,7 +103,7 @@ st.markdown(
     
     /* Headers */
     h1 {
-        color: #1a1a1a;
+        color: var(--text-primary);
         font-weight: 700;
         font-size: 2.5rem;
         margin-bottom: 0.5rem;
@@ -83,17 +111,17 @@ st.markdown(
     }
     
     h2 {
-        color: #2d3748;
+        color: var(--text-primary);
         font-weight: 600;
         font-size: 1.75rem;
         margin-top: 2rem;
         margin-bottom: 1rem;
         padding-bottom: 0.75rem;
-        border-bottom: 2px solid #e2e8f0;
+        border-bottom: 2px solid var(--border-color);
     }
     
     h3 {
-        color: #4a5568;
+        color: var(--text-primary);
         font-weight: 600;
         font-size: 1.25rem;
         margin-top: 1.5rem;
@@ -101,7 +129,7 @@ st.markdown(
     }
     
     h4 {
-        color: #2d3748;
+        color: var(--text-primary);
         font-weight: 600;
         font-size: 1rem;
         margin-bottom: 0.5rem;
@@ -109,36 +137,47 @@ st.markdown(
     
     /* Metric Cards */
     [data-testid="stMetricValue"] {
-        font-size: 2rem;
+        font-size: 2.25rem;
         font-weight: 700;
-        color: #fafafa;
+        color: #ffffff;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 0.5rem;
     }
     
     [data-testid="stMetricLabel"] {
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: #9ca3af;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #94a3b8;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.75px;
+        margin-bottom: 0.25rem;
     }
     
     [data-testid="stMetricDelta"] {
-        font-size: 0.875rem;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        background: rgba(255,255,255,0.1);
     }
     
     /* Metric Container Enhancement */
     [data-testid="metric-container"] {
-        background: #1f2937;
-        padding: 1.5rem;
-        border-radius: 12px;
-        border: 1px solid #374151;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        transition: all 0.3s ease;
+        background: linear-gradient(145deg, #1f2937, #111827);
+        padding: 2rem;
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1),
+                   0 10px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
     }
     
     [data-testid="metric-container"]:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        transform: translateY(-2px);
+        transform: translateY(-4px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15),
+                   0 12px 20px rgba(0,0,0,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
     }
     
     /* Sidebar */
@@ -146,7 +185,7 @@ st.markdown(
         background: #1f2937;
         border-right: 1px solid #374151;
         padding: 1.5rem 1rem;
-        min-width: 300px !important;
+        width: 280px !important;
     }
     
     /* Fix sidebar dropdown width */
@@ -158,15 +197,47 @@ st.markdown(
         width: 100% !important;
     }
     
-    /* Style sidebar selects */
-    [data-testid="stSidebar"] [data-baseweb="select"] {
-        background-color: #374151;
+    /* Style sidebar selects and inputs */
+    [data-testid="stSidebar"] [data-baseweb="select"],
+    [data-testid="stSidebar"] [data-baseweb="popover"],
+    [data-testid="stSidebar"] .stSlider > div > div > div {
+        background-color: #1f2937 !important;
         border-radius: 8px;
         border: 1px solid rgba(255,255,255,0.1);
     }
     
-    [data-testid="stSidebar"] [data-baseweb="select"] * {
+    /* Fix dropdown items background */
+    [data-baseweb="popover"] {
+        background-color: #1f2937 !important;
+    }
+    
+    [data-baseweb="menu"] {
+        background-color: #1f2937 !important;
+    }
+    
+    /* Style dropdown options */
+    [data-testid="stSidebar"] [data-baseweb="select"] ul {
+        background-color: #1f2937 !important;
+    }
+    
+    [data-testid="stSidebar"] [data-baseweb="select"] li {
+        background-color: #1f2937 !important;
+    }
+    
+    [data-testid="stSidebar"] [data-baseweb="select"] li:hover {
+        background-color: #374151 !important;
+    }
+    
+    /* Ensure all text in sidebar is visible */
+    [data-testid="stSidebar"] [data-baseweb="select"] *,
+    [data-testid="stSidebar"] .stSlider label,
+    [data-testid="stSidebar"] .stSlider p {
         color: #ffffff !important;
+    }
+    
+    /* Style slider */
+    [data-testid="stSidebar"] .stSlider > div > div > div > div {
+        background-color: var(--accent-primary) !important;
     }
     
     [data-testid="stSidebar"] h1,
@@ -175,7 +246,18 @@ st.markdown(
         color: #fafafa;
     }
     
-    /* Sidebar text color */
+    /* Style multiselect tags */
+    [data-testid="stSidebar"] [data-baseweb="tag"] {
+        background-color: var(--accent-primary) !important;
+        border: none !important;
+    }
+    
+    /* Style dropdown search input */
+    [data-testid="stSidebar"] input {
+        background-color: #1f2937 !important;
+        color: #ffffff !important;
+        border-color: rgba(255,255,255,0.1) !important;
+    }    /* Sidebar text color */
     [data-testid="stSidebar"] .css-10trblm, 
     [data-testid="stSidebar"] .css-183lzff,
     [data-testid="stSidebar"] .css-1aehpvj {
@@ -211,7 +293,7 @@ st.markdown(
     
     /* Select boxes and inputs */
     .stSelectbox, .stMultiSelect {
-        background: white;
+        background: var(--bg-secondary);
     }
     
     /* Divider */
@@ -219,16 +301,76 @@ st.markdown(
         margin: 2.5rem 0;
         border: none;
         height: 1px;
-        background: #e2e8f0;
+        background: var(--border-color);
     }
     
     /* Chart containers */
     .js-plotly-plot {
         border-radius: 12px;
-        background: #1f2937;
-        padding: 1rem;
-        border: 1px solid #374151;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        background: transparent !important;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+        margin: 0;
+        overflow: hidden !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    /* Chart wrapper to ensure proper containment */
+    [data-testid="stPlotlyChart"] > div {
+        background: var(--chart-bg) !important;
+        border-radius: 12px;
+        overflow: visible !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    \n        padding: 1rem;\n        border: 1px solid var(--border-color);\n        box-shadow: var(--shadow-md);
+        padding-right: 1.25rem;}
+    
+    /* Chart container hover effects */
+    .js-plotly-plot:hover {
+        border-color: var(--border-hover);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    /* Ensure chart text is visible */
+    .js-plotly-plot text {
+        fill: var(--text-secondary) !important;
+    }
+    
+    /* Fix chart axis and grid lines */
+    .js-plotly-plot .gridlayer path {
+        stroke: var(--grid-color) !important;
+    }
+    
+    /* Improve legend visibility */
+    .js-plotly-plot .legend text {
+        fill: var(--text-secondary) !important;
+    }
+    
+    /* Fix chart background */
+    .js-plotly-plot .plot-container {
+        background: var(--chart-bg) !important;
+    }
+    
+    /* Ensure modebar (plotly toolbar) matches theme */
+    .js-plotly-plot .modebar {
+        background: transparent !important;
+    }
+    
+    .js-plotly-plot .modebar-btn path {
+        fill: var(--text-secondary) !important;
+    }
+    
+    /* Fix chart subplot backgrounds */
+    .js-plotly-plot .subplot {
+        background: var(--chart-bg) !important;
+    }
+    
+    /* Ensure chart container takes full width */
+    .element-container:has([data-testid="stPlotlyChart"]) {
+        width: 100% !important;
+        max-width: 100% !important;
     }
     
     /* Info boxes */
@@ -243,7 +385,7 @@ st.markdown(
     
     /* Dataframe styling */
     .dataframe {
-        border: 1px solid #e2e8f0 !important;
+        border: 1px solid var(--border-color) !important;
         border-radius: 8px;
         overflow: hidden;
     }
@@ -414,7 +556,7 @@ st.markdown(
     .emoji {
         display: none;
     }
-</style>
+    [data-testid="stSidebar"] input[type="radio"] { accent-color: var(--accent-primary) !important; }`r`n    input[type="radio"] { accent-color: var(--accent-primary) !important; }`r`n</style>
 """,
     unsafe_allow_html=True,
 )
@@ -423,7 +565,109 @@ st.markdown(
 # ============================================================================
 # DATA LOADING FUNCTION
 # ============================================================================
+# Default chart theme and colors
+CHART_COLORS = ["#3182ce", "#48bb78", "#ed8936", "#9f7aea", "#f56565"]
+
+
 @st.cache_data
+def get_chart_theme():
+    return {
+        "template": "plotly_dark",
+        "layout": {
+            "plot_bgcolor": "#262730",
+            "paper_bgcolor": "#262730",
+            "width": None,  # Allow responsive width
+            "autosize": True,  # Enable auto-sizing
+            "height": 450,  # Consistent height
+            "margin": { "l": 60, "r": 60, "t": 60, "b": 60},  # Consistent margins
+            "font": {
+                "family": "Inter, sans-serif",
+                "color": "#FAFAFA",
+                "size": 12,
+            },
+            "title": {
+                "text": "",
+                "font": {"color": "#FAFAFA", "size": 16},
+                "x": 0.5,
+                "xanchor": "center",
+                "y": 0.95,
+                "yanchor": "top",
+                "pad": {"b": 20},
+            },
+            "legend": {
+                "font": {"color": "#FAFAFA"},
+                "bgcolor": "rgba(31,41,55,0.8)",
+                "bordercolor": "rgba(250,250,250,0.1)",
+                "borderwidth": 1,
+                "x": 1,
+                "y": 1,
+                "xanchor": "right",
+                "yanchor": "top",
+            },
+            "xaxis": {
+                "gridcolor": "rgba(250,250,250,0.1)",
+                "zerolinecolor": "rgba(255,255,255,0.2)",
+                "title": {
+                    "font": {"color": "#FAFAFA", "size": 13},
+                    "standoff": 20,
+                },
+                "tickfont": {"color": "#FAFAFA"},
+                "showgrid": True,
+                "gridwidth": 1,
+                "automargin": True,
+            },
+            "yaxis": {
+                "gridcolor": "rgba(250,250,250,0.1)",
+                "zerolinecolor": "rgba(255,255,255,0.2)",
+                "title": {
+                    "font": {"color": "#FAFAFA", "size": 13},
+                    "standoff": 20,
+                },
+                "tickfont": {"color": "#FAFAFA"},
+                "showgrid": True,
+                "gridwidth": 1,
+                "automargin": True,
+            },
+            "hoverlabel": {"font": {"size": 12}, "bgcolor": "#1E1E1E"},
+            "updatemenus": [
+                {
+                    "bgcolor": "#262730",
+                    "font": {"color": "#FAFAFA"},
+                }
+            ],
+            "bargap": 0.15,  # Consistent spacing for bar charts
+            "bargroupgap": 0.1,
+        },
+    }
+
+
+def apply_chart_theme(fig, title=None):
+    """Apply consistent theme to a plotly figure"""
+    theme = get_chart_theme()
+    layout_update = theme["layout"].copy()
+
+    if title:
+        layout_update["title"] = {
+            "text": title,
+            "font": theme["layout"]["title"]["font"],
+            "x": 0.5,
+            "xanchor": "center",
+            "y": 0.95,
+            "yanchor": "top",
+        }
+
+    fig.update_layout(layout_update)
+
+    # Ensure text is visible on all traces
+    fig.update_traces(
+        textfont={"color": "#e2e8f0"},
+        hoverlabel={"bgcolor": "#374151"},
+        selector=dict(type=["bar", "scatter", "scatterpolar"]),
+    )
+
+    return fig
+
+
 def load_data():
     """Load and cache the ESG dataset"""
     try:
@@ -646,14 +890,41 @@ if page == "Overview":
             ]
         )
 
-        fig.update_layout(
-            title="Top 10 Overall ESG Performers",
-            xaxis_title="",
-            yaxis_title="ESG Score",
-            template="plotly_white",
-            height=400,
-            xaxis_tickangle=-45,
-            margin=dict(l=20, r=20, t=40, b=120),
+        # Get default theme
+        theme = get_chart_theme()
+
+        # Update layout with theme and specific settings
+        layout_update = {
+            **theme["layout"],
+            "title": {
+                "text": "Top 10 Overall ESG Performers",
+                "y": 0.95,
+                "x": 0.5,
+                "xanchor": "center",
+                "yanchor": "top",
+                "font": {"size": 20, "color": "#e2e8f0"},
+            },
+            "xaxis_title": "",
+            "yaxis_title": {
+                "text": "ESG Score",
+                "font": {"size": 14, "color": "#e2e8f0"},
+            },
+            "height": 450,  # Increased height for better visibility
+            "xaxis_tickangle": -45,
+            "margin": dict(l=40, r=40, t=60, b=120),  # Adjusted margins
+            "showlegend": True,
+            "legend": {"bgcolor": "rgba(31,41,55,0.8)"},  # Semi-transparent legend
+            "plot_bgcolor": "#1f2937",
+            "paper_bgcolor": "#1f2937",
+        }
+
+        fig.update_layout(layout_update)
+
+        # Update bar colors for better visibility
+        fig.update_traces(
+            marker_color="rgba(49,130,206,0.8)",  # Semi-transparent blue
+            textfont={"color": "#e2e8f0"},  # Light text color
+            textposition="outside",  # Text above bars
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -682,11 +953,10 @@ if page == "Overview":
             ]
         )
 
+        fig = apply_chart_theme(fig, title="Top 10 Environmental Performers")
         fig.update_layout(
-            title="Top 10 Environmental Performers",
             xaxis_title="",
             yaxis_title="Environmental Score",
-            template="plotly_white",
             height=400,
             xaxis_tickangle=-45,
             margin=dict(l=20, r=20, t=40, b=120),
@@ -718,11 +988,10 @@ if page == "Overview":
             ]
         )
 
+        fig = apply_chart_theme(fig, title="Top 10 Social Performers")
         fig.update_layout(
-            title="Top 10 Social Performers",
             xaxis_title="",
             yaxis_title="Social Score",
-            template="plotly_white",
             height=400,
             xaxis_tickangle=-45,
             margin=dict(l=20, r=20, t=40, b=120),
@@ -754,11 +1023,10 @@ if page == "Overview":
             ]
         )
 
+        fig = apply_chart_theme(fig, title="Top 10 Governance Performers")
         fig.update_layout(
-            title="Top 10 Governance Performers",
             xaxis_title="",
             yaxis_title="Governance Score",
-            template="plotly_white",
             height=400,
             xaxis_tickangle=-45,
             margin=dict(l=20, r=20, t=40, b=120),
@@ -851,12 +1119,10 @@ if page == "Overview":
             )
         )
 
+        fig = apply_chart_theme(fig, title="ESG Score Components Distribution")
         fig.update_layout(
-            template="plotly_white",
             height=400,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
-            title="ESG Score Components Distribution",
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -919,12 +1185,10 @@ if page == "Overview":
                 textposition="auto",
             )
         )
+        fig = apply_chart_theme(fig, title="Resource Efficiency by Industry")
         fig.update_layout(
-            template="plotly_white",
             height=400,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
-            title="Resource Efficiency by Industry",
             xaxis_title="Efficiency Score",
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -972,27 +1236,91 @@ if page == "Overview":
     col1, col2 = st.columns(2)
 
     with col1:
-        fig = px.scatter(
-            filtered_df,
-            x="ESG_Overall",
-            y="ProfitMargin",
-            color="Industry",
-            size="MarketCap",
-            trendline="ols",
-            title="ESG Score vs Profitability",
-            color_discrete_sequence=[
-                "#3182ce",
-                "#48bb78",
-                "#ed8936",
-                "#9f7aea",
-                "#f56565",
-            ],
-        )
+        # Create scatter plot with trendline option
+        # Create base figure
+        try:
+            fig = px.scatter(
+                filtered_df,
+                x="ESG_Overall",
+                y="ProfitMargin",
+                color="Industry",
+                size="MarketCap",
+                color_discrete_sequence=[
+                    "#3182ce",
+                    "#48bb78",
+                    "#ed8936",
+                    "#9f7aea",
+                    "#f56565",
+                ],
+            )
+
+            # Get theme
+            theme = get_chart_theme()
+
+            # Update with theme and specific settings
+            layout_update = {
+                **theme["layout"],
+                "title": {
+                    "text": "ESG Score vs Profitability",
+                    "font": {"size": 16, "color": "#e2e8f0"},
+                    "x": 0.5,
+                    "xanchor": "center",
+                },
+                "showlegend": True,
+                "legend": {
+                    "bgcolor": "rgba(31,41,55,0.8)",
+                    "bordercolor": "rgba(255,255,255,0.1)",
+                    "borderwidth": 1,
+                    "font": {"color": "#e2e8f0"},
+                },
+            }
+            # Calculate correlation coefficient
+            correlation = filtered_df["ESG_Overall"].corr(filtered_df["ProfitMargin"])
+            correlation_text = f"Correlation: {correlation:.2f}"
+
+            # Add correlation information
+            fig.add_annotation(
+                text=correlation_text,
+                xref="paper",
+                yref="paper",
+                x=0.02,
+                y=0.98,
+                showarrow=False,
+                font=dict(size=12),
+            )
+
+        except Exception as e:
+            # Fallback to scatter plot without trendline if error occurs
+            fig = px.scatter(
+                filtered_df,
+                x="ESG_Overall",
+                y="ProfitMargin",
+                color="Industry",
+                size="MarketCap",
+                title="ESG Score vs Profitability",
+                color_discrete_sequence=[
+                    "#3182ce",
+                    "#48bb78",
+                    "#ed8936",
+                    "#9f7aea",
+                    "#f56565",
+                ],
+            )
+
+            fig.add_annotation(
+                text="Note: Trendline unavailable due to insufficient data",
+                xref="paper",
+                yref="paper",
+                x=0.02,
+                y=0.98,
+                showarrow=False,
+                font=dict(size=12),
+            )
+
+        fig = apply_chart_theme(fig)
         fig.update_layout(
-            template="plotly_white",
             height=400,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -1028,13 +1356,11 @@ if page == "Overview":
             )
         )
 
+        fig = apply_chart_theme(fig, title="Financial Performance by ESG Quartile")
         fig.update_layout(
             barmode="group",
-            template="plotly_white",
             height=400,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
-            title="Financial Performance by ESG Quartile",
             xaxis_title="ESG Quartile",
             yaxis_title="Performance (%)",
         )
@@ -1130,11 +1456,10 @@ if page == "Overview":
         )
     )
 
+    fig = apply_chart_theme(fig)
     fig.update_layout(
-        template="plotly_white",
         height=300,
         margin=dict(l=20, r=20, t=40, b=20),
-        font=dict(color="#2d3748", size=12),
         showlegend=True,
     )
     st.plotly_chart(fig, use_container_width=True)
@@ -1222,11 +1547,10 @@ elif page == "Trends Over Time":
             )
         )
 
+    fig = apply_chart_theme(fig)
     fig.update_layout(
-        template="plotly_white",
         height=400,
         margin=dict(l=20, r=20, t=40, b=20),
-        font=dict(color="#2d3748", size=12),
         xaxis_title="Year",
         yaxis_title="ESG Score",
         hovermode="x unified",
@@ -1260,11 +1584,10 @@ elif page == "Trends Over Time":
             )
         )
 
+        fig = apply_chart_theme(fig)
         fig.update_layout(
-            template="plotly_white",
             height=350,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
             xaxis_title="Year",
             yaxis_title="Carbon Emissions",
         )
@@ -1289,11 +1612,10 @@ elif page == "Trends Over Time":
             )
         )
 
+        fig = apply_chart_theme(fig)
         fig.update_layout(
-            template="plotly_white",
             height=350,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
             xaxis_title="Year",
             yaxis_title="Energy Consumption",
         )
@@ -1317,11 +1639,10 @@ elif page == "Trends Over Time":
         color_discrete_sequence=["#3182ce", "#48bb78", "#ed8936", "#9f7aea", "#f56565"],
     )
 
+    fig = apply_chart_theme(fig)
     fig.update_layout(
-        template="plotly_white",
         height=400,
         margin=dict(l=20, r=20, t=40, b=20),
-        font=dict(color="#2d3748", size=12),
         xaxis_title="Year",
         yaxis_title="Average ESG Score",
     )
@@ -1352,12 +1673,10 @@ elif page == "Trends Over Time":
             )
         )
 
+        fig = apply_chart_theme(fig, title="Revenue YoY % Change")
         fig.update_layout(
-            title="Revenue YoY % Change",
-            template="plotly_white",
             height=350,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
             xaxis_title="Year",
             yaxis_title="% Change",
         )
@@ -1383,12 +1702,10 @@ elif page == "Trends Over Time":
             )
         )
 
+        fig = apply_chart_theme(fig, title="ESG Score YoY Change")
         fig.update_layout(
-            title="ESG Score YoY Change",
-            template="plotly_white",
             height=350,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
             xaxis_title="Year",
             yaxis_title="Point Change",
         )
@@ -1418,15 +1735,12 @@ elif page == "Key Insights":
         color="Industry",
         size="Revenue",
         hover_data=["CompanyName", "Year"],
-        trendline="ols",
         color_discrete_sequence=["#3182ce", "#48bb78", "#ed8936", "#9f7aea", "#f56565"],
     )
+    fig = apply_chart_theme(fig, title="Carbon Emissions vs ESG Overall Score")
     fig.update_layout(
-        template="plotly_white",
         height=400,
         margin=dict(l=20, r=20, t=40, b=20),
-        font=dict(color="#2d3748", size=12),
-        title="Carbon Emissions vs ESG Overall Score",
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -1457,16 +1771,15 @@ elif page == "Key Insights":
             text="ESG_Overall",
         )
         fig.update_traces(texttemplate="%{text:.1f}", textposition="outside")
+        fig = apply_chart_theme(fig, title="Industry ESG Scores (colored by Carbon)")
         fig.update_layout(
-            template="plotly_white",
             height=400,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
-            title="Industry ESG Scores (colored by Carbon)",
         )
         st.plotly_chart(fig, use_container_width=True)
 
     with col2:
+        # Create scatter plot
         fig = px.scatter(
             industry_comparison,
             x="Revenue",
@@ -1481,14 +1794,30 @@ elif page == "Key Insights":
                 "#9f7aea",
                 "#f56565",
             ],
+            )
+
+        # Calculate correlation coefficient
+        correlation = industry_comparison["Revenue"].corr(
+            industry_comparison["ESG_Overall"]
         )
-        fig.update_traces(textposition="top center")
+        correlation_text = f"Correlation: {correlation:.2f}"
+
+        # Update layout with correlation info
+        fig.add_annotation(
+            text=correlation_text,
+            xref="paper",
+            yref="paper",
+            x=0.02,
+            y=0.98,
+            showarrow=False,
+            font=dict(size=12),
+        )
+
+        fig.update_traces(textposition="top center", selector=dict(type="scatter"))
+        fig = apply_chart_theme(fig, title="Revenue vs ESG by Industry")
         fig.update_layout(
-            template="plotly_white",
             height=400,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
-            title="Revenue vs ESG by Industry",
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -1613,12 +1942,11 @@ elif page == "Industry Analysis":
                 )
             )
 
+        fig = apply_chart_theme(fig)
         fig.update_layout(
             barmode="group",
-            template="plotly_white",
             height=400,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
             legend=dict(
                 orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
             ),
@@ -1640,11 +1968,10 @@ elif page == "Industry Analysis":
                 "#f56565",
             ],
         )
+        fig = apply_chart_theme(fig)
         fig.update_layout(
-            template="plotly_white",
             height=400,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
             showlegend=False,
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -1675,11 +2002,10 @@ elif page == "Industry Analysis":
             )
         )
 
+        fig = apply_chart_theme(fig)
         fig.update_layout(
-            template="plotly_white",
             height=400,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
             xaxis_title="Average Carbon Emissions",
             yaxis_title="Industry",
         )
@@ -1709,11 +2035,10 @@ elif page == "Industry Analysis":
             ],
         )
         fig.update_traces(textposition="top center")
+        fig = apply_chart_theme(fig)
         fig.update_layout(
-            template="plotly_white",
             height=400,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -1792,11 +2117,10 @@ elif page == "Regional Insights":
             )
         )
 
+        fig = apply_chart_theme(fig)
         fig.update_layout(
-            template="plotly_white",
             height=400,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
             xaxis_title="Region",
             yaxis_title="Average ESG Score",
         )
@@ -1822,12 +2146,11 @@ elif page == "Regional Insights":
                 )
             )
 
+        fig = apply_chart_theme(fig)
         fig.update_layout(
             polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
-            template="plotly_white",
             height=400,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -1847,15 +2170,23 @@ elif page == "Regional Insights":
             values=region_carbon.values,
             names=region_carbon.index,
             hole=0.4,
-            color_discrete_sequence=["#48bb78", "#3182ce", "#ed8936", "#9f7aea"],
+            color_discrete_sequence=CHART_COLORS,
         )
-        fig.update_layout(
-            template="plotly_white",
-            height=300,
-            margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
-            showlegend=True,
+
+        theme = get_chart_theme()
+        fig.update_layout(**theme["layout"])
+        fig.update_layout(showlegend=True, legend={
+                "orientation": "h",
+                "yanchor": "bottom",
+                "y": -0.3,
+                "xanchor": "center",
+                "x": 0.5,
+            },
         )
+
+        # Ensure text contrast
+        fig.update_traces(
+            textfont={"color": "#e2e8f0", "size": 14}, hoverlabel={"bgcolor": "#374151"})
         st.plotly_chart(fig, use_container_width=True)
 
     with col2:
@@ -1868,11 +2199,10 @@ elif page == "Regional Insights":
             hole=0.4,
             color_discrete_sequence=["#3182ce", "#48bb78", "#ed8936", "#9f7aea"],
         )
+        fig = apply_chart_theme(fig)
         fig.update_layout(
-            template="plotly_white",
             height=300,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
             showlegend=True,
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -1889,11 +2219,16 @@ elif page == "Regional Insights":
             hole=0.4,
             color_discrete_sequence=["#ed8936", "#48bb78", "#3182ce", "#9f7aea"],
         )
+        fig = apply_chart_theme(fig)
         fig.update_layout(
-            template="plotly_white",
             height=300,
             margin=dict(l=20, r=20, t=40, b=20),
-            font=dict(color="#2d3748", size=12),
             showlegend=True,
         )
         st.plotly_chart(fig, use_container_width=True)
+
+
+
+
+
+
