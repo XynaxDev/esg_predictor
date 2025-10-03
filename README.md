@@ -180,6 +180,6 @@ Project Link: [https://github.com/yourusername/esg_predictor](https://github.com
 <div align="center">
 
 [![Made with Streamlit](https://img.shields.io/badge/Made%20with-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit)](https://streamlit.io)
-[![Follow on GitHub](https://img.shields.io/github/followers/yourusername?style=for-the-badge&logo=github)](https://github.com/XynaxDev)
+[![Follow on GitHub](https://img.shields.io/github/followers/XynaxDev?style=for-the-badge&logo=github)](https://github.com/XynaxDev)
 
 </div>
