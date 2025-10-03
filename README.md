@@ -11,7 +11,7 @@
 
 <h3>A Comprehensive ESG Performance Analytics and Visualization Platform</h3>
 
-[Live Demo](#) · [Report Bug](https://github.com/XynaxDev/esg_predictor/issues) · [Request Feature](https://github.com/XynaxDev/esg_predictor/issues)
+[Live Demo](https://esgpredictor.streamlit.app/) · [Report Bug](https://github.com/XynaxDev/esg_predictor/issues) · [Request Feature](https://github.com/XynaxDev/esg_predictor/issues)
 
 </div>
 
