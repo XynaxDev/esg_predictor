@@ -4,11 +4,12 @@ output/*
 # But keep .gitkeep
 !output/.gitkeep
 
+# But keep .gitkeep
+!output/questions_png/.gitkeep
+
 # Ignore everything inside questions_png/
 output/questions_png/*
 
-# But keep .gitkeep
-!output/questions_png/.gitkeep
 
 # Ignore only images (optional)
 *.png
