@@ -1,4 +1,4 @@
-﻿import streamlit as st
+import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
@@ -671,7 +671,7 @@ def apply_chart_theme(fig, title=None):
 def load_data():
     """Load and cache the ESG dataset"""
     try:
-        df = pd.read_csv("esg_financial_data.csv")
+        df = pd.read_csv("./data/esg_financial_dataset.csv")
         return df
     except:
         # Sample data for demonstration
@@ -2226,9 +2226,3 @@ elif page == "Regional Insights":
             showlegend=True,
         )
         st.plotly_chart(fig, use_container_width=True)
-
-
-
-
-
-
